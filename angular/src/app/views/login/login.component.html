@@ -1,0 +1,12 @@
+<div class="card-container">
+  <div class="card">
+    <form [formGroup]="loginForm" (submit)="submit()">
+      <label for="username">Login</label>
+      <input id="username" name="username" formControlName="username" type="text">
+      <label for="password">Password</label>
+      <input id="password" name="password" formControlName="password" type="password">
+      <button type="submit">Login</button>
+      <button>Cancel</button>
+    </form>
+  </div>
+</div>

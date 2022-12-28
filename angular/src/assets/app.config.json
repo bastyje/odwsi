@@ -1,0 +1,5 @@
+{
+  "apiURI": "https://localhost:7282/api/",
+  "issuer": "http://localhost:5013",
+  "issuerRequireHttps": false
+}

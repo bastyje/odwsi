@@ -1,0 +1,35 @@
+textarea {
+  resize: none;
+}
+
+label {
+  margin-right: 20px;
+}
+
+label, input {
+  font-size: 30px;
+}
+
+.container {
+  margin: 10px;
+}
+
+.grid-container {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+}
+
+.md-container, textarea {
+  padding: 5px;
+  border: 1px solid #dedede;
+  border-radius: 4px;
+  outline: none;
+}
+
+.button-container {
+  display: flex;
+  justify-content: end;
+  gap: 10px;
+}

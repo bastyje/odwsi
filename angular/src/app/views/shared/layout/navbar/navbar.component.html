@@ -1,0 +1,7 @@
+<nav class="nav">
+  <a class="loud" [routerLink]="['/', 'notes', 'create']">Create note</a>
+  <a [routerLink]="['/', 'notes', 'my-notes']">My notes</a>
+  <a [routerLink]="['/', 'notes', 'shared-notes']">Notes shared with me</a>
+  <a [routerLink]="['/', 'notes', 'public-notes']">Public notes</a>
+  <button class="logout" (click)="logout()">Logout</button>
+</nav>

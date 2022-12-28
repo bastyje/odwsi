@@ -1,0 +1,9 @@
+.main-layout {
+  height: 100%;
+  position: relative;
+}
+
+.page {
+  overflow: auto;
+  height: calc(100% - 75px);
+}
