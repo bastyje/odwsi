@@ -14,12 +14,12 @@ namespace Notepad.API.Identity;
 
 public static class IdentityServerConfiguration
 {
-    public static List<ApiScope> ApiScopes => new()
+    private static List<ApiScope> ApiScopes => new()
     {
         new("NotepadAPI", "NotepadAPI")
     };
 
-    public static List<Client> Clients = new()
+    private static List<Client> Clients = new()
     {
         new()
         {
@@ -34,8 +34,8 @@ public static class IdentityServerConfiguration
             }
         }
     };
-    
-    public static List<IdentityResource> IdentityResources = new()
+
+    private static readonly List<IdentityResource> IdentityResources = new()
     {
         new IdentityResources.Profile(),
         new IdentityResources.OpenId()
@@ -54,10 +54,6 @@ public static class IdentityServerConfiguration
 
         services.AddTransient<IResourceOwnerPasswordValidator, ResourceOwnerValidationService>();
         services.AddTransient<IProfileService, ProfileService>();
-
-        services
-            .AddIdentity<IdentityUser, IdentityRole>()
-            .AddEntityFrameworkStores<SecurityDbContext>();
         
         return services;
     }

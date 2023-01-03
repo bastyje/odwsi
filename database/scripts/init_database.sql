@@ -10,24 +10,57 @@ GO
 
 -- TABLE DEFINITIONS
 
-CREATE TABLE security.IdentityUser (
-  Id VARCHAR(36),
-  AccessFailedCount INT,
-  Avatar NVARCHAR(MAX),
-  ConcurrencyStamp NVARCHAR(MAX),
-  Email VARCHAR(50),
-  EmailConfirmed BIT,
-  LockoutEnabled BIT,
-  LockoutEnd DATETIMEOFFSET,
-  Name NVARCHAR(MAX),
-  NormalizedEmail NVARCHAR(256),
-  NormalizedUserName NVARCHAR(256),
-  PasswordHash VARCHAR(MAX),
-  PhoneNumber NVARCHAR(MAX),
-  PhoneNumberConfirmed BIT,
-  SecurityStamp NVARCHAR(MAX),
-  TwoFactorEnabled BIT,
-  UserName NVARCHAR(256)
-  CONSTRAINT [PK_IdentityUser] PRIMARY KEY CLUSTERED([Id] ASC)
+CREATE TABLE security.[BlacklistPassword] (
+  Id INT IDENTITY(1, 1),
+  Password NVARCHAR(MAX)
+  CONSTRAINT [PK_BlackListPasswords] PRIMARY KEY CLUSTERED([Id] ASC)
 );
+GO
+
+CREATE TABLE security.[User] (
+  Id VARCHAR(36) NOT NULL,
+  UserName NVARCHAR(100),
+  PasswordHash VARCHAR(MAX),
+  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED([Id] ASC)
+);
+GO
+
+CREATE TABLE dbo.Note (
+  Id VARCHAR(36),
+  Title NVARCHAR(100),
+  Text NVARCHAR(MAX),
+  UserId VARCHAR(36),
+  ScopeType INT,
+  CONSTRAINT [PK_Note] PRIMARY KEY CLUSTERED([Id] ASC)
+);
+GO
+
+CREATE TABLE dbo.UserNote (
+  UserId VARCHAR(36) CONSTRAINT FK_UserNote_User REFERENCES security.[User](Id),
+  NoteId VARCHAR(36) CONSTRAINT FK_UserNote_Note REFERENCES dbo.Note(Id)
+  CONSTRAINT [PK_UserNote] PRIMARY KEY CLUSTERED([UserId] ASC, [NoteId] ASC)
+);
+GO
+
+-- OTHER OPERATIONS
+
+CREATE TABLE ##BLACKLIST_STAGE (Password NVARCHAR(MAX));
+GO
+
+BULK INSERT ##BLACKLIST_STAGE
+FROM '/db/passwords'
+WITH (
+  FIELDTERMINATOR = '\n',
+  ROWTERMINATOR = '\n'
+)
+GO
+
+INSERT INTO [security].[BlacklistPassword] (Password)
+SELECT * FROM ##BLACKLIST_STAGE;
+GO
+
+DROP TABLE ##BLACKLIST_STAGE;
+GO
+
+PRINT 'initialization finished'
 GO

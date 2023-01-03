@@ -1,22 +1,28 @@
 using System.Security.Claims;
+using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Validation;
 using Notepad.Data.Repositories.Interfaces;
+using Notepad.Service.Services.Interfaces;
 
 namespace Notepad.API.Services;
 
 public class ResourceOwnerValidationService : IResourceOwnerPasswordValidator
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IUserService _userService;
 
-    public ResourceOwnerValidationService(IUserRepository userRepository)
+    public ResourceOwnerValidationService(IUserService userService)
     {
-        _userRepository = userRepository;
+        _userService = userService;
     }
     
     public Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
     {
-        var user = _userRepository.GetUserByUsername(context.UserName);
-        context.Result = new GrantValidationResult(subject: "123", authenticationMethod: "custom");
+        var user = _userService.GetUser(context.UserName);
+        if (user != null && _userService.VerifyPassword(user.PasswordHash, context.Password))
+        {
+            context.Result = new GrantValidationResult(user.Id, GrantType.ResourceOwnerPassword);
+        }
+        
         return Task.CompletedTask;
     }
 }

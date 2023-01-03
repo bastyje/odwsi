@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Notepad.Data.Repositories.Interfaces;
 using Notepad.Service.Models;
 using Notepad.Service.Services.Interfaces;
 
@@ -15,10 +14,17 @@ public class UserController : ControllerBase
         _userService = userService;
     }
     
-    [HttpPut]
+    [HttpPost]
     public ActionResult Register([FromBody] RegisterUserModel registerUserModel)
     {
-        _userService.Register(registerUserModel);
-        return new OkResult();
+        var serviceMessage = _userService.Register(registerUserModel);
+        return new OkObjectResult(serviceMessage);
+    }
+
+    [HttpGet]
+    public ActionResult Get()
+    {
+        var username = User.Claims.FirstOrDefault(c => c.ValueType == "username").Value;
+        return new OkObjectResult(_userService.GetUser(username));
     }
 }

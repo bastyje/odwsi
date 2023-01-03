@@ -1,16 +1,37 @@
 <div class="container">
-  <label for="title">Title:</label>
-  <input type="text" id="title" [(ngModel)]="title">
-  <div class="grid-container">
-    <textarea type="text" [(ngModel)]="markdown"></textarea>
+  <section class="title-container">
+    <label class="title" for="title">Title:</label>
+    <input class="title" type="text" id="title" [(ngModel)]="note.title">
+  </section>
+  <section class="scope-container">
+    <div class="buttons-container">
+      <button [ngClass]="private() ? 'active' : ''" (click)="toggle('private')">Private</button>
+      <button [ngClass]="shared() ? 'active' : ''" (click)="toggle('shared')">Shared</button>
+      <button [ngClass]="public() ? 'active' : ''" (click)="toggle('public')">Public</button>
+    </div>
+    <div class="buttons-container">
+      <label for="encrypted">Encrypted</label>
+      <input id="encrypted" type="checkbox" [(ngModel)]="encrypted">
+    </div>
+    <div class="password-container" *ngIf="encrypted">
+      <label for="password">Password</label>
+      <input class="password" id="password" type="password" [(ngModel)]="password">
+      <label for="confirm-password">Confirm password</label>
+      <input class="password" id="confirm-password" type="password" [(ngModel)]="confirmedPassword">
+      <em *ngFor="let errorMessage of errorMessages">{{errorMessage.message}}</em>
+    </div>
+  </section>
+
+  <section class="grid-container">
+    <textarea type="text" [(ngModel)]="note.text"></textarea>
     <div class="md-container">
-      <markdown [data]="markdown" commandLine></markdown>
+      <markdown [data]="note.text" commandLine></markdown>
     </div>
     <div></div>
     <div class="button-container">
-      <button>Save</button>
+      <button (click)="save()">Save</button>
       <button (click)="cancel()">Cancel</button>
     </div>
-  </div>
+  </section>
 </div>
 

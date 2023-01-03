@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ConfigModel } from "../models/config.model";
 import { catchError, map } from "rxjs";
@@ -9,8 +9,10 @@ import { catchError, map } from "rxjs";
 export class ConfigService {
 
   private appConfig: ConfigModel;
+  private http: HttpClient;
 
-  constructor(private http: HttpClient) {
+  constructor(handler: HttpBackend) {
+    this.http = new HttpClient(handler);
     this.appConfig = {} as ConfigModel;
   }
 

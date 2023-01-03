@@ -1,5 +1,6 @@
 <div class="container">
-  <table>
+  <em *ngFor="let errorMessage of errorMessages">{{errorMessage}}</em>
+  <table *ngIf="success">
     <thead>
     <tr>
       <td>Date</td>

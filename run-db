@@ -1,0 +1,1 @@
+docker run -p 1400:1433 --name notepad_db --rm -it -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD=Password123 odwsi-database

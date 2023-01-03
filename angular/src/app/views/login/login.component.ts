@@ -22,8 +22,6 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {}
 
   submit(): void {
-    console.log(this.loginForm.value);
-    console.log(this.authenticationService.signIn(this.loginForm.value));
-    // this.router.navigate(['/', 'notes']);
+    this.authenticationService.signIn(this.loginForm.value).then(_ => this.router.navigate(['/']));
   }
 }

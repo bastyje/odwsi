@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NoteListModel } from "../../../models/note-list.model";
+import { NoteService } from "../../../service/note.service";
+import { ErrorMessage } from "../../../models/error-message.model";
 
 @Component({
   selector: 'app-my-notes',
@@ -9,19 +11,19 @@ import { NoteListModel } from "../../../models/note-list.model";
 export class MyNotesComponent implements OnInit {
 
   notes: NoteListModel[] = [];
+  errorMessages: ErrorMessage[] = [];
+  success: boolean = true;
 
-  constructor() {
-    for (let i = 0; i < 10; i++) {
-      this.notes.push({
-        id: '123',
-        date: new Date(),
-        title: 'Note created to test notes list',
-        author: 'Sebastian Górka'
-      });
-    }
-  }
+  constructor(private noteService: NoteService) {}
 
   ngOnInit(): void {
+    this.noteService.getUserNotes().subscribe(r => {
+      if (r.success) {
+        this.notes = r.content;
+      } else {
+        this.errorMessages = r.errors;
+      }
+    });
   }
 
   delete(note: any): void {

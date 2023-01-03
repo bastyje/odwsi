@@ -1,6 +1,11 @@
-form {
+.form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
   width: fit-content;
+}
+
+.error-message-container {
+  color: red;
+  grid-column: span 2;
 }

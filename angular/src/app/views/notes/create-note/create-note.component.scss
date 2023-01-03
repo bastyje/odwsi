@@ -6,7 +6,7 @@ label {
   margin-right: 20px;
 }
 
-label, input {
+.title {
   font-size: 30px;
 }
 
@@ -15,7 +15,6 @@ label, input {
 }
 
 .grid-container {
-  margin-top: 10px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
@@ -32,4 +31,45 @@ label, input {
   display: flex;
   justify-content: end;
   gap: 10px;
+}
+
+.active {
+  color: cornflowerblue;
+}
+
+.buttons-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.password-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+  & > label {
+    text-align: right;
+  }
+}
+
+.scope-container {
+  margin: 20px 0;
+}
+
+.password {
+  width: 150px;
+}
+
+.title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+em {
+  color: red;
+  grid-column: span 2;
+  text-align: center;
 }

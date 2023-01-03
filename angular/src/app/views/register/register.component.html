@@ -1,16 +1,19 @@
 <div class="card-container">
   <div class="card">
-    <form (submit)="submit()">
+    <div class="form">
       <label for="login">Login</label>
-      <input id="login" type="text">
+      <input id="login" type="text" [(ngModel)]="registerUserModel.userName">
       <label for="password">Password</label>
-      <input id="password" type="password">
-      <label for="confirm-password">Confirm password</label>
-      <input id="confirm-password" type="password">
+      <input id="password" type="password" [(ngModel)]="registerUserModel.password">
+      <label for="confirmPassword">Confirm password</label>
+      <input id="confirmPassword" type="password" [(ngModel)]="confirmPassword">
       <label for="email">Email</label>
-      <input id="email" type="email">
-      <button type="submit">Register</button>
+      <input id="email" type="email" [(ngModel)]="registerUserModel.email">
+      <div class="error-message-container">
+        <em *ngFor="let errorMessage of errorMessages">{{errorMessage.message}}</em>
+      </div>
+      <button (click)="submit()">Register</button>
       <button>Cancel</button>
-    </form>
+    </div>
   </div>
 </div>

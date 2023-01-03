@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Notepad.API.Identity;
+using Notepad.API.Services;
+using Notepad.API.Services.Interfaces;
 using Notepad.Data.DbContexts;
 using Notepad.Data.Repositories;
 using Notepad.Data.Repositories.Interfaces;
@@ -18,22 +20,29 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureIdentityServer();
 
-builder.Services.AddDbContext<SecurityDbContext>(options =>
+builder.Services.AddDbContext<NotepadDbContext>(options =>
 {
     options.UseSqlServer("Server=localhost,1400;Database=notepad;User ID=sa;Password=Password123;");
 });
 
-builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
-{
-    options.Authority = "https://localhost:5001";
-    options.TokenValidationParameters = new()
-    {
-        ValidateAudience = false
-    };
-});
+builder.Services.AddAuthentication("Bearer").AddJwtBearerConfiguration("http://localhost:5013");
+
+// builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
+// {
+//     options.RequireHttpsMetadata = false;
+//     options.Authority = "http://localhost:5001";
+//     options.Audience = "NotepadAngularApp";    options.TokenValidationParameters = new()
+//     {
+//         ValidateAudience = false
+//     };
+// });
+
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<INoteService, NoteService>();
+builder.Services.AddScoped<INoteRepository, NoteRepository>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 builder.Services.AddCors(options =>
 {
@@ -63,6 +72,7 @@ if (app.Environment.IsDevelopment())
 app.UseIdentityServer();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors(corsPolicyName);
 
 app.MapControllers();
 
