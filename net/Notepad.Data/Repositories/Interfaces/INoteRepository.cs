@@ -9,4 +9,6 @@ public interface INoteRepository
     List<Note> GetShared(string userId);
     Note GetById(string id);
     void Add(Note note);
+    void AddUserNote(UserNote userNote);
+    int SaveChanges();
 }

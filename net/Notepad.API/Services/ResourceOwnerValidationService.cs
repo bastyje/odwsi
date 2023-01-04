@@ -17,12 +17,20 @@ public class ResourceOwnerValidationService : IResourceOwnerPasswordValidator
     
     public Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
     {
+        Thread.Sleep(2000);
         var user = _userService.GetUser(context.UserName);
-        if (user != null && _userService.VerifyPassword(user.PasswordHash, context.Password))
+        if (user != null && user.LockoutEnd < DateTime.Now)
         {
-            context.Result = new GrantValidationResult(user.Id, GrantType.ResourceOwnerPassword);
+            if (_userService.VerifyPassword(user.PasswordHash, context.Password))
+            {
+                context.Result = new GrantValidationResult(user.Id, GrantType.ResourceOwnerPassword);
+            }
+            else
+            {
+                _userService.ReportFailedLogin(user.Id);
+            }
         }
-        
+
         return Task.CompletedTask;
     }
 }

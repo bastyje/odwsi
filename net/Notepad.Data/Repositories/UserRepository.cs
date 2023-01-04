@@ -14,14 +14,20 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public ApplicationUser GetByUsername(string username)
+    public ApplicationUser GetById(string id)
     {
-        return _dbContext.User.FirstOrDefault(u => u.UserName == username);
+        return _dbContext.User.FirstOrDefault(u => u.Id == id);
     }
 
     public void Add(ApplicationUser applicationUser)
     {
         _dbContext.Add(applicationUser);
+        _dbContext.SaveChanges();
+    }
+
+    public void Update(ApplicationUser applicationUser)
+    {
+        _dbContext.Update(applicationUser);
         _dbContext.SaveChanges();
     }
 

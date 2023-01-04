@@ -9,6 +9,18 @@
       <button [ngClass]="shared() ? 'active' : ''" (click)="toggle('shared')">Shared</button>
       <button [ngClass]="public() ? 'active' : ''" (click)="toggle('public')">Public</button>
     </div>
+    <div *ngIf="shared()" class="buttons-container">
+      <input type="text" [(ngModel)]="username">
+      <button (click)="addUser()">Add</button>
+    </div>
+    <div *ngIf="shared()" class="buttons-container">
+      Users:
+    </div>
+    <div *ngIf="shared()" class="buttons-container">
+      <ul>
+        <li *ngFor="let user of note.userIds">{{user}}</li>
+      </ul>
+    </div>
     <div class="buttons-container">
       <label for="encrypted">Encrypted</label>
       <input id="encrypted" type="checkbox" [(ngModel)]="encrypted">

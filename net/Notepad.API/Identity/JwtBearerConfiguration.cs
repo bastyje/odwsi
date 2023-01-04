@@ -7,16 +7,17 @@ namespace Notepad.API.Identity;
 
 public static class JwtBearerConfiguration
 {
-    public static AuthenticationBuilder AddJwtBearerConfiguration(this AuthenticationBuilder builder, string issuer)
+    public static AuthenticationBuilder AddJwtBearerConfiguration(this AuthenticationBuilder builder, string authority)
     {
         return builder.AddJwtBearer(options =>
         {
             options.RequireHttpsMetadata = false;
-            options.Authority = issuer;
+            options.Authority = authority;
             options.TokenValidationParameters = new TokenValidationParameters()
             {
                 ValidateAudience = false,
-                ClockSkew = new System.TimeSpan(0, 0, 30)
+                ClockSkew = new System.TimeSpan(0, 0, 30),
+                ValidateIssuer = false
             };
             options.Events = new JwtBearerEvents()
             {

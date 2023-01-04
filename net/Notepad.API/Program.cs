@@ -1,3 +1,6 @@
+using System.Net;
+using Duende.IdentityServer.Extensions;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Notepad.API.Identity;
 using Notepad.API.Services;
@@ -8,41 +11,38 @@ using Notepad.Data.Repositories.Interfaces;
 using Notepad.Service.Services;
 using Notepad.Service.Services.Interfaces;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
 const string corsPolicyName = "NotepadCorsPolicy";
 
+var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.UseKestrel(options =>
+{
+    options.AddServerHeader = false;
+}).UseUrls("http://*:80", "https://*:443");
+
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureIdentityServer();
 
 builder.Services.AddDbContext<NotepadDbContext>(options =>
 {
-    options.UseSqlServer("Server=localhost,1400;Database=notepad;User ID=sa;Password=Password123;");
+    options.UseSqlServer(builder.Configuration["Data:ConnectionString"]);
 });
 
-builder.Services.AddAuthentication("Bearer").AddJwtBearerConfiguration("http://localhost:5013");
-
-// builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
-// {
-//     options.RequireHttpsMetadata = false;
-//     options.Authority = "http://localhost:5001";
-//     options.Audience = "NotepadAngularApp";    options.TokenValidationParameters = new()
-//     {
-//         ValidateAudience = false
-//     };
-// });
-
+builder.Services.AddAuthentication("Bearer").AddJwtBearerConfiguration(builder.Configuration["Authority"]);
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<INoteService, NoteService>();
 builder.Services.AddScoped<INoteRepository, NoteRepository>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+// builder.Services.Configure<ForwardedHeadersOptions>(options =>
+// {
+//     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+// });
+    
 
 builder.Services.AddCors(options =>
 {
@@ -61,14 +61,20 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// app.UseForwardedHeaders();
+app.UseHsts();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection();
+// app.Use((context, next) =>
+// {
+//     context.Request.Scheme = "https";
+//     return next();
+// });
 app.UseIdentityServer();
 app.UseAuthentication();
 app.UseAuthorization();

@@ -16,18 +16,18 @@ public class NoteRepository : INoteRepository
 
     public List<Note> GetPublic()
     {
-        return _notepadDbContext.Note.Where(n => n.ScopeType == ScopeTypeEnum.Public).ToList();
+        return _notepadDbContext.Note.Where(n => n.ScopeType == ScopeTypeEnum.Public).OrderByDescending(n => n.CreationDate).ToList();
     }
 
     public List<Note> GetMy(string userId)
     {
-        return _notepadDbContext.Note.Where(n => n.UserId == userId).ToList();
+        return _notepadDbContext.Note.Where(n => n.UserId == userId).OrderByDescending(n => n.CreationDate).ToList();
     }
 
     public List<Note> GetShared(string userId)
     {
         var userNotes = _notepadDbContext.UserNote.Where(un => un.UserId == userId);
-        return _notepadDbContext.Note.Where(n => userNotes.Any(un => un.NoteId == n.Id) && n.ScopeType == ScopeTypeEnum.Shared).ToList();
+        return _notepadDbContext.Note.Where(n => userNotes.Any(un => un.NoteId == n.Id) && n.ScopeType == ScopeTypeEnum.Shared).OrderByDescending(n => n.CreationDate).ToList();
     }
 
     public Note GetById(string id)
@@ -37,7 +37,16 @@ public class NoteRepository : INoteRepository
 
     public void Add(Note note)
     {
-        _notepadDbContext.Add(note);
-        _notepadDbContext.SaveChanges();
+        _notepadDbContext.Note.Add(note);
+    }
+
+    public void AddUserNote(UserNote userNote)
+    {
+        _notepadDbContext.UserNote.Add(userNote);
+    }
+
+    public int SaveChanges()
+    {
+        return _notepadDbContext.SaveChanges();
     }
 }

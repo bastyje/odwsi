@@ -4,7 +4,7 @@ import { ErrorMessage } from "../../../models/error-message.model";
 import { NoteService } from "../../../service/note.service";
 import { NoteCreateModel } from "../../../models/note-create.model";
 import { ScopeTypeEnum } from "../../../enums/scope-type.enum";
-import { AES, enc } from 'crypto-js';
+import { AES, format } from 'crypto-js';
 import { Router } from "@angular/router";
 
 @Component({
@@ -14,15 +14,18 @@ import { Router } from "@angular/router";
 })
 export class CreateNoteComponent implements OnInit {
 
-  note: NoteCreateModel = <NoteCreateModel> {
-    title: 'enter title here',
-    text: '*enter your note here*',
-    scopeType: ScopeTypeEnum.Private
-  }
-
+  username: string = '';
   encrypted: boolean = false;
   password: string = '';
   confirmedPassword: string = '';
+
+  note: NoteCreateModel = <NoteCreateModel> {
+    title: 'enter title here',
+    text: '*enter your note here*',
+    scopeType: ScopeTypeEnum.Private,
+    userIds: [],
+    encrypted: false
+  }
 
   errorMessages: ErrorMessage[] = [];
 
@@ -30,10 +33,16 @@ export class CreateNoteComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  addUser(): void {
+    this.note.userIds.push(this.username);
+    this.username = '';
+  }
+
   save(): void {
     this.errorMessages = [];
 
     if (this.encrypted) {
+      this.note.encrypted = true;
       if (this.password.length === 0) {
         this.errorMessages.push({
           message: 'Password is required'

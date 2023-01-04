@@ -11,9 +11,9 @@
     </thead>
     <tbody>
     <tr *ngFor="let note of notes">
-      <td>{{note.date | date: 'yyyy-MM-dd'}}</td>
+      <td>{{note.creationDate | date: 'yyyy-MM-dd hh:mm'}}</td>
       <td>{{note.title}}</td>
-      <td>{{note.author}}</td>
+      <td>{{note.userId}}</td>
       <td>
         <button [routerLink]="['/', 'notes', 'preview', note.id]">See note</button>
       </td>

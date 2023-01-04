@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Notepad.Service\Notepad.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="keys\is-signing-key-0D0B47667D132F581FFB4BC3D935E17D.json" />
+  </ItemGroup>
+
 </Project>

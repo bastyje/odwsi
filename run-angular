@@ -1,0 +1,8 @@
+docker run \
+  --name odwsi-angular \
+  --rm \
+  -it \
+  --ip='10.0.0.100' \
+  --network='odwsi-notepad' \
+  --cap-add=NET_ADMIN \
+  odwsi-angular

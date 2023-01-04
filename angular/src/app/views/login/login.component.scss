@@ -4,3 +4,19 @@ form {
   grid-gap: 10px;
   width: fit-content;
 }
+
+a {
+  grid-column: span 2;
+  text-align: center;
+  color: blue;
+}
+
+button {
+  grid-column: span 2;
+}
+
+em {
+  grid-column: span 2;
+  color: red;
+  text-align: center;
+}

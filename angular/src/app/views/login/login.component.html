@@ -5,8 +5,9 @@
       <input id="username" name="username" formControlName="username" type="text">
       <label for="password">Password</label>
       <input id="password" name="password" formControlName="password" type="password">
+      <em *ngFor="let errorMessage of errorMessages">{{errorMessage.message}}</em>
       <button type="submit">Login</button>
-      <button>Cancel</button>
+      <a [routerLink]="['/', 'register']">Don't have an account? Register!</a>
     </form>
   </div>
 </div>

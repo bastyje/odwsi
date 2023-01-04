@@ -18,9 +18,10 @@ CREATE TABLE security.[BlacklistPassword] (
 GO
 
 CREATE TABLE security.[User] (
-  Id VARCHAR(36) NOT NULL,
-  UserName NVARCHAR(100),
+  Id VARCHAR(100) NOT NULL,
   PasswordHash VARCHAR(MAX),
+  FailedAttempts INT,
+  LockoutEnd DATETIME2,
   CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED([Id] ASC)
 );
 GO
@@ -30,13 +31,15 @@ CREATE TABLE dbo.Note (
   Title NVARCHAR(100),
   Text NVARCHAR(MAX),
   UserId VARCHAR(36),
+  Encrypted BIT,
+  CreationDate DATETIME,
   ScopeType INT,
   CONSTRAINT [PK_Note] PRIMARY KEY CLUSTERED([Id] ASC)
 );
 GO
 
 CREATE TABLE dbo.UserNote (
-  UserId VARCHAR(36) CONSTRAINT FK_UserNote_User REFERENCES security.[User](Id),
+  UserId VARCHAR(100) CONSTRAINT FK_UserNote_User REFERENCES security.[User](Id),
   NoteId VARCHAR(36) CONSTRAINT FK_UserNote_Note REFERENCES dbo.Note(Id)
   CONSTRAINT [PK_UserNote] PRIMARY KEY CLUSTERED([UserId] ASC, [NoteId] ASC)
 );

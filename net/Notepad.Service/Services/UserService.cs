@@ -9,6 +9,8 @@ namespace Notepad.Service.Services;
 
 public class UserService : IUserService
 {
+    private const int LOCKOUT_DURATION = 5;
+    private const int MAX_FAILED_ATTEMPTS = 3;
     private const int ITERATIONS = 100000;
     private const int HASH_LENGTH = 20;
     private const int SALT_LENGTH = 16;
@@ -21,22 +23,23 @@ public class UserService : IUserService
 
     public ApplicationUser GetUser(string username)
     {
-        return _userRepository.GetByUsername(username);
+        return _userRepository.GetById(username);
     }
 
     public ServiceMessage Register(RegisterUserModel registerUserModel)
     {
         var serviceMessage = new ServiceMessage();
-        var user = _userRepository.GetByUsername(registerUserModel.UserName);
+        var user = _userRepository.GetById(registerUserModel.UserName);
         if (user == null)
         {
             if (!_userRepository.IsPasswordBlacklist(registerUserModel.Password))
             {
                 _userRepository.Add(new ApplicationUser
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    UserName = registerUserModel.UserName,
-                    PasswordHash = HashPassword(registerUserModel.Password)
+                    Id = registerUserModel.UserName,
+                    PasswordHash = HashPassword(registerUserModel.Password),
+                    FailedAttempts = 0,
+                    LockoutEnd = DateTime.MinValue
                 });
             }
             else
@@ -84,5 +87,22 @@ public class UserService : IUserService
                 verified = false;
         
         return verified;
+    }
+
+    public void ReportFailedLogin(string userId)
+    {
+        var user = _userRepository.GetById(userId);
+        user.FailedAttempts++;
+        
+        if (user.FailedAttempts >= MAX_FAILED_ATTEMPTS)
+        {
+            user.FailedAttempts = 0;
+            user.LockoutEnd = DateTime.Now.Add(new TimeSpan(0, LOCKOUT_DURATION, 0));
+            _userRepository.Update(user);
+        }
+        else
+        {
+            _userRepository.Update(user);
+        }
     }
 }

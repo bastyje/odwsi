@@ -1,0 +1,53 @@
+version: "3.7"
+services:
+  app:
+    image: odwsi-angular
+    restart: always
+    networks:
+      notepad-net:
+        ipv4_address: 10.0.0.100
+  # nginx:
+  #  image: nginx
+  #  volumes:
+  #    - ./nginx/docker/cert/self.pass:/etc/ssl/private/self.pass
+  #    - ./nginx/docker/cert/self.key:/etc/ssl/private/self.key
+  #    - ./nginx/docker/cert/self.crt:/etc/ssl/certs/self.crt
+  #    - ./nginx/docker/nginx.conf:/etc/nginx/nginx.conf
+  #    - ./nginx/docker/snippets:/etc/nginx/snippets
+  #  networks:
+  #    notepad-net:
+  #      ipv4_address: 10.0.0.101
+  api:
+    image: odwsi-net
+    networks:
+      notepad-net:
+        ipv4_address: 10.0.0.101
+    # build:
+    #   context: ./net
+    #   dockerfile: ./docker/Dockerfile
+    working_dir: /App
+  mssql:
+    image: odwsi-database
+    # build:
+    #   context: ./database
+    #   dockerfile: ./Dockerfile
+    # volumes: 
+    #   - db:/var/opt/mssql
+    environment:
+      SA_PASSWORD: "Password123"
+      ACCEPT_EULA: "Y"
+    # ports:
+    #   - 1435:1433
+    networks:
+      notepad-net:
+        ipv4_address: 10.0.0.102
+networks:
+  notepad-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/24
+          # gateway: 10.5.0.1
+# volumes:
+#   db:
+#     driver: local

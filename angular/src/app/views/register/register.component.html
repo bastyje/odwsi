@@ -4,16 +4,23 @@
       <label for="login">Login</label>
       <input id="login" type="text" [(ngModel)]="registerUserModel.userName">
       <label for="password">Password</label>
-      <input id="password" type="password" [(ngModel)]="registerUserModel.password">
+      <input id="password" type="password" [(ngModel)]="registerUserModel.password" (input)="onInput()">
       <label for="confirmPassword">Confirm password</label>
       <input id="confirmPassword" type="password" [(ngModel)]="confirmPassword">
-      <label for="email">Email</label>
-      <input id="email" type="email" [(ngModel)]="registerUserModel.email">
+      <em class="strength">
+        Password strength:
+        <span class="strong" *ngIf="strong()">strong</span>
+        <span class="medium" *ngIf="medium()">medium</span>
+        <span class="weak" *ngIf="weak()">weak</span>
+      </em>
+
+<!--      <label for="email">Email</label>-->
+<!--      <input id="email" type="email" [(ngModel)]="registerUserModel.email">-->
       <div class="error-message-container">
         <em *ngFor="let errorMessage of errorMessages">{{errorMessage.message}}</em>
       </div>
       <button (click)="submit()">Register</button>
-      <button>Cancel</button>
+      <button (click)="cancel()">Cancel</button>
     </div>
   </div>
 </div>

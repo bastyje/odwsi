@@ -9,5 +9,5 @@ public interface INoteService
     ServiceMessage<List<Note>> GetMy(string userId);
     ServiceMessage<List<Note>> GetShared(string userId);
     ServiceMessage<Note> GetById(string id);
-    ServiceMessage Create(Note note, string userId);
+    ServiceMessage Create(NoteCreateModel noteCreateModel);
 }

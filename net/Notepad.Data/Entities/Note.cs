@@ -8,5 +8,7 @@ public class Note
     public string Title { get; set; }
     public string Text { get; set; }
     public ScopeTypeEnum ScopeType { get; set; }
+    public bool Encrypted { get; set; }
+    public DateTime CreationDate { get; set; }
     public string UserId { get; set; }
 }

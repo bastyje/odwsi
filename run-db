@@ -1,1 +1,10 @@
-docker run -p 1400:1433 --name notepad_db --rm -it -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD=Password123 odwsi-database
+docker run \
+  --name notepad_db \
+  --rm \
+  -it \
+  -e ACCEPT_EULA=Y \
+  -e MSSQL_SA_PASSWORD=Password123 \
+  --ip='10.0.0.102' \
+  --network='odwsi-notepad' \
+  --cap-add=NET_ADMIN \
+  odwsi-database

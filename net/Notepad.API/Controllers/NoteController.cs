@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Notepad.API.Services.Interfaces;
 using Notepad.Data.Entities;
 using Notepad.Data.Repositories.Interfaces;
+using Notepad.Service.Models;
 using Notepad.Service.Services.Interfaces;
 
 namespace Notepad.API.Controllers;
@@ -27,9 +28,10 @@ public class NoteController : ControllerBase
     }
     
     [HttpPost]
-    public ActionResult AddNote([FromBody] Note note)
+    public ActionResult AddNote([FromBody] NoteCreateModel note)
     {
-        return new OkObjectResult(_noteService.Create(note, _currentUserService.UserId));
+        note.UserId = _currentUserService.UserId;
+        return new OkObjectResult(_noteService.Create(note));
     }
 
     [HttpGet("{id}")]

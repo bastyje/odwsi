@@ -10,4 +10,5 @@ public interface IUserService
     ServiceMessage Register(RegisterUserModel registerUserModel);
     ApplicationUser GetUser(string username);
     bool VerifyPassword(string dbPassword, string enteredPassword);
+    void ReportFailedLogin(string userId);
 }
