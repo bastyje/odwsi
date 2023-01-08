@@ -1,53 +1,36 @@
 version: "3.7"
 services:
   app:
-    image: odwsi-angular
+    image: bastyje/odwsi-angular:1.0
     restart: always
     networks:
       notepad-net:
-        ipv4_address: 10.0.0.100
-  # nginx:
-  #  image: nginx
-  #  volumes:
-  #    - ./nginx/docker/cert/self.pass:/etc/ssl/private/self.pass
-  #    - ./nginx/docker/cert/self.key:/etc/ssl/private/self.key
-  #    - ./nginx/docker/cert/self.crt:/etc/ssl/certs/self.crt
-  #    - ./nginx/docker/nginx.conf:/etc/nginx/nginx.conf
-  #    - ./nginx/docker/snippets:/etc/nginx/snippets
-  #  networks:
-  #    notepad-net:
-  #      ipv4_address: 10.0.0.101
+        ipv4_address: 10.0.0.2
   api:
-    image: odwsi-net
+    image: bastyje/odwsi-net:1.0
     networks:
       notepad-net:
-        ipv4_address: 10.0.0.101
-    # build:
-    #   context: ./net
-    #   dockerfile: ./docker/Dockerfile
+        ipv4_address: 10.0.0.3
+      notepad-internal-net:
+        ipv4_address: 10.0.1.3
     working_dir: /App
   mssql:
-    image: odwsi-database
-    # build:
-    #   context: ./database
-    #   dockerfile: ./Dockerfile
-    # volumes: 
-    #   - db:/var/opt/mssql
+    image: bastyje/odwsi-database:1.0
     environment:
       SA_PASSWORD: "Password123"
       ACCEPT_EULA: "Y"
-    # ports:
-    #   - 1435:1433
     networks:
-      notepad-net:
-        ipv4_address: 10.0.0.102
+      notepad-internal-net:
+        ipv4_address: 10.0.1.2
 networks:
   notepad-net:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.0.0.0/24
-          # gateway: 10.5.0.1
-# volumes:
-#   db:
-#     driver: local
+        - subnet: 10.0.0.0/29
+  notepad-internal-net:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.1.0/29
